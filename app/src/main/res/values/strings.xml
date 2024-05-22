@@ -1,0 +1,14 @@
+<resources>
+    <string name="app_name">Calculator</string>
+    <string name="ac">AC</string>
+    <string name="del">DEL</string>
+    <string name="divide">/</string>
+    <string name="multi">*</string>
+    <string name="minus">-</string>
+    <string name="plus">+</string>
+    <string name="equal">=</string>
+    <string name="dot">.</string>
+    <string name="ans">Ans</string>
+
+
+</resources>
