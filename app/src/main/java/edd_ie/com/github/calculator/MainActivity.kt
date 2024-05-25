@@ -21,6 +21,7 @@ class MainActivity : AppCompatActivity() {
 
     private var operators = LinkedList<Char>()
     private var numbers = LinkedList<Double>()
+    private var lastNum: Double = 0.0
 
     private var operating: Boolean = false
 
@@ -110,6 +111,10 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    /*TODO: Fix the calculation error when a person deletes multiple lines the
+        calculation get stuck in on the previous result
+    */
+
     private fun del(){
         if(operating){
             // Delete to clear memory
@@ -123,22 +128,34 @@ class MainActivity : AppCompatActivity() {
                     num = num!!.dropLast(1)
                     display = display!!.dropLast(1)
                     binding.history.text = display
-                }else{
+
+                }
+                else{
                     clear()
                 }
             }
             //Delete an operator
             else{
+
                 display = display!!.dropLast(3)
                 binding.history.text = display
+                operators.removeLast()
 
-                when (operators.removeLast()) {
-                    '+' -> add()
-                    '-' -> sub()
-                    '/' -> div()
-                    '*' -> multi()
+                if(operators.isNotEmpty()){
+                    when(operators.last){
+                        '-' -> add()
+                        '+' -> sub()
+                        '*' -> div()
+                        '/' -> multi()
+                    }
                 }
-                num = numbers.removeLast().toString()
+
+                if(numbers.last%1 != 0.0){
+                    num += numbers.removeLast().toString()
+                }
+                else{
+                    num = numbers.removeLast().toInt().toString()
+                }
 
                 binding.result.text = result.toString()
 
@@ -170,6 +187,7 @@ class MainActivity : AppCompatActivity() {
                     operators.add(operation)
                 } else {
                     numbers.add(num!!.toDouble())
+                    lastNum = numbers.last
                     when (operators.last) {
                         '+' -> add()
                         '-' -> sub()
