@@ -1,10 +1,14 @@
 package edd_ie.com.github.calculator
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
+import androidx.core.content.ContentProviderCompat.requireContext
+import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import edd_ie.com.github.calculator.databinding.ActivityMainBinding
@@ -24,6 +28,8 @@ class MainActivity : AppCompatActivity() {
     private var lastNum: Double = 0.0
 
     private var operating: Boolean = false
+
+    private var mode: String = "lightTheme"
 
 //    var lastNode = numbers.last
 //    lastNode?.value = 5.0
@@ -65,9 +71,36 @@ class MainActivity : AppCompatActivity() {
         binding.btnMulti.setOnClickListener {operation('*')}
         binding.btnDel.setOnClickListener {del()}
         binding.btnEqual.setOnClickListener {equal()}
+        binding.btnAns.setOnClickListener {ans()}
 
+        binding.switchMode?.setOnClickListener {switchMode()}
 
     }
+
+
+    private fun switchMode(){
+
+        when(mode){
+            "lightTheme" -> {
+                binding.switchMode?.setBackgroundResource(R.drawable.dark_mode_switch)
+                mode = "darkTheme"
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+            }
+            "darkTheme" -> {
+                binding.switchMode?.setBackgroundResource(R.drawable.light_mode_switch)
+                mode = "lightTheme"
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+            }
+        }
+
+//        binding.switchMode?.setBackgroundResource(R.drawable.dark_mode_switch)
+//        binding.switchMode?.contentDescription = "darkTheme"
+////        val intent = Intent(this@MainActivity, ChangeTheme::class.java)
+////        startActivity(intent)
+//        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+
+    }
+
 
     private fun onNumClick(clickedNum: String){
         if(num == null && clickedNum != "."){
@@ -210,6 +243,15 @@ class MainActivity : AppCompatActivity() {
             display += " $operation "
             binding.history.text = display
             binding.result.text = result.toString()
+        }
+    }
+
+    private fun ans(){
+        if(operating) {
+            val data: String = prevResult.toString()
+            prevResult = 0.0
+            binding.result.text = result.toString()
+            onNumClick(data)
         }
     }
 

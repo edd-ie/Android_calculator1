@@ -8,22 +8,40 @@
     android:background="@color/background_color"
     tools:context=".MainActivity">
 
-    <com.google.android.material.appbar.AppBarLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/app_bar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        app:layout_constraintTop_toTopOf="parent"
         android:background="@color/bar_color"
-        >
+        app:layout_constraintTop_toTopOf="parent"
+        tools:layout_editor_absoluteX="36dp">
+
 
         <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/toolbar"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="?attr/actionBarSize"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="1.0"
             app:title="Calculator"
             app:titleTextColor="@color/white" />
 
-    </com.google.android.material.appbar.AppBarLayout>
+        <ImageButton
+            android:id="@+id/switch_mode"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_gravity="center|end"
+            android:layout_marginEnd="16dp"
+            android:background="@drawable/dark_mode_switch"
+            android:contentDescription="lightTheme"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <TextView
         android:id="@+id/history"
