@@ -1,7 +1,9 @@
 package edd_ie.com.github.calculator
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
@@ -17,6 +19,7 @@ import java.util.LinkedList
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
+    private lateinit var sharedPreferences: SharedPreferences
 
     private var num: String? = null
     private var display: String? = null
@@ -77,19 +80,40 @@ class MainActivity : AppCompatActivity() {
 
     }
 
+    override fun onResume() {
+        super.onResume()
+
+        sharedPreferences = getSharedPreferences("mode", MODE_PRIVATE)
+        mode = sharedPreferences.getString("mode", "darkTheme").toString()
+
+        if(mode == "lightTheme"){
+            binding.switchMode?.setBackgroundResource(R.drawable.light_mode_switch)
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+        }
+        else{
+            binding.switchMode?.setBackgroundResource(R.drawable.dark_mode_switch)
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+        }
+
+    }
+
 
     private fun switchMode(){
 
         when(mode){
-            "lightTheme" -> {
-                binding.switchMode?.setBackgroundResource(R.drawable.dark_mode_switch)
-                mode = "darkTheme"
-                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
-            }
             "darkTheme" -> {
-                binding.switchMode?.setBackgroundResource(R.drawable.light_mode_switch)
                 mode = "lightTheme"
+                sharedPreferences.edit().putString("mode", mode).apply()
+
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+                binding.switchMode?.setBackgroundResource(R.drawable.light_mode_switch)
+            }
+            "lightTheme" -> {
+                mode = "darkTheme"
+                sharedPreferences.edit().putString("mode", mode).apply()
+
                 AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+                binding.switchMode?.setBackgroundResource(R.drawable.light_mode_switch)
             }
         }
 
