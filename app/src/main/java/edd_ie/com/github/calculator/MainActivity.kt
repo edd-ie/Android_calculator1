@@ -80,6 +80,66 @@ class MainActivity : AppCompatActivity() {
 
     }
 
+    override fun onPause() {
+        super.onPause()
+
+        sharedPreferences = this.getSharedPreferences("calculations", MODE_PRIVATE)
+        val editor = sharedPreferences.edit()
+
+
+        editor.putString("num", num)
+        editor.putString("display", display)
+        editor.putFloat("result", result.toFloat())
+        editor.putFloat("prevResult", prevResult.toFloat())
+        editor.putBoolean("operating", operating)
+        editor.putString("operators", operators.toString())
+        editor.putString("numbers", numbers.toString())
+        editor.putFloat("lastNum", lastNum.toFloat())
+
+        editor.apply()
+
+    }
+
+    override fun onStart() {
+        super.onStart()
+
+        //TODO: Fix the calculation error when app restarts
+        sharedPreferences = this.getSharedPreferences("calculations", MODE_PRIVATE)
+
+        num = sharedPreferences.getString("num", null)
+        display = sharedPreferences.getString("display", null)
+        result = sharedPreferences.getFloat("result", 0.0f).toDouble()
+        prevResult = sharedPreferences.getFloat("prevResult", 0.0f).toDouble()
+        operating = sharedPreferences.getBoolean("operating", false)
+
+
+        lastNum = sharedPreferences.getFloat("lastNum", 0.0f).toDouble()
+
+        if(display.isNullOrEmpty()) {
+            val stringArray = display?.split(" ")?.toTypedArray()
+
+            if (stringArray != null) {
+                for (element in stringArray) {
+                    when (stringArray.indexOf(element) % 2) {
+                        0 -> numbers.add(element.toDouble())
+                        1 -> operators.add(element[0])
+                    }
+                }
+            }
+        }
+        else{
+            operators = LinkedList<Char>()
+            numbers = LinkedList<Double>()
+        }
+
+//        operators = LinkedList(sharedPreferences.getString("operators", null)!!.toList())
+//        numbers = LinkedList(sharedPreferences.getString("numbers", null)!!.toList().map { it.toString().toDouble() })
+
+        binding.result.text = result.toString()
+        binding.history.text = display
+
+    }
+
     override fun onResume() {
         super.onResume()
 
